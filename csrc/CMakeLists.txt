@@ -96,8 +96,10 @@ STRING(REPLACE "-" ";" FA_NVCC_ARCH_BIN ${NVCC_ARCH_BIN})
 
 set(FA_GENCODE_OPTION "SHELL:")
 foreach(arch ${FA_NVCC_ARCH_BIN})
-   if(${arch} GREATER_EQUAL 80)
-     set(FA_GENCODE_OPTION "${FA_GENCODE_OPTION} -gencode arch=compute_${arch},code=sm_${arch}")
+   string(REGEX REPLACE "^sm_" "" arch_stripped "${arch}")
+   string(REGEX MATCH "^[0-9]+" arch_num "${arch_stripped}")
+   if(arch_num GREATER_EQUAL 80)
+     set(FA_GENCODE_OPTION "${FA_GENCODE_OPTION} -gencode arch=compute_${arch_stripped},code=sm_${arch_stripped}")
    endif()
 endforeach()
 
